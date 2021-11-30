@@ -22,7 +22,7 @@
 TARGETS = client# TODO: put your file names here, *without a file extension*
 
 # names of .cc files that are used by all of the above targets
-CXXFILES = net# no common files yet :)
+CXXFILES = net vec client_commands# no common files yet :)
 
 #
 # The rest of this file should never need to change

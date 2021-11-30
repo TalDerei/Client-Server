@@ -6,7 +6,7 @@
 #include <string>
 
 #include "net.h"
-#include "protocol.h"
+#include "protocols.h"
 #include "vec.h"
 
 #include "client_commands.h"

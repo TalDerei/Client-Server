@@ -10,7 +10,7 @@
 
 #include "config_t.h"
 #include "net.h"
-#include "protocol.h"
+#include "protocols.h"
 #include "client_commands.h"
 
 using namespace std;

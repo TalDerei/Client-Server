@@ -11,7 +11,6 @@
 #include "config_t.h"
 #include "net.h"
 #include "protocol.h"
-
 #include "client_commands.h"
 
 using namespace std;
@@ -21,10 +20,16 @@ using namespace std;
  * program work
  */
 void usage() {
-    cout << "  -s [string] Name of the server (probably 'localhost')" << endl;
-    cout << "  -p [int]    Port number of the server" << endl;
-    cout << "  -w [int]    Time to wait between messages" << endl;
-    cout << "  -h          Print help (this message)" << endl;
+    cout << "  -s [string]  Name of the server (probably 'localhost')" << endl;
+    cout << "  -p [int]     Port number of the server" << endl;
+    cout << "  -w [int]     Time to wait between messages" << endl;
+    cout << "  -C [string]  API Command" << endl;
+    cout << "                   KVI (insert)" << endl;
+    cout << "                   KVG (contains)" << endl;
+    cout << "                   KVD (remove)" << endl;
+    cout << "  -k [string]   Key" << endl;
+    cout << "  -v [string]   Value" << endl;
+    cout << "  -h            Print help (this message)" << endl;
 }
 
 /**
@@ -37,15 +42,15 @@ void usage() {
  */
 void parseargs(int argc, char** argv, config_t& config) {
     long opt;
-    while ((opt = getopt(argc, argv, "s:p:w:C:1:2:h")) != -1) {
+    while ((opt = getopt(argc, argv, "s:p:w:C:k:v:h")) != -1) {
         switch (opt) {
             case 's': config.server_name = std::string(optarg); break;
             case 'p': config.port = atoi(optarg); break;  
             case 'w': config.wait = atoi(optarg); break;
             case 'h': usage(); break;
             case 'C': config.command = std::string(optarg); break;
-            case '1': config.arg_1st = std::string(optarg); break;
-            case '2': config.arg_2nd = std::string(optarg); break;
+            case 'k': config.key = std::string(optarg); break;
+            case 'v': config.value = std::string(optarg); break;
         }
     }
 }
@@ -75,12 +80,13 @@ int main(int argc, char **argv) {
         for (size_t i = 0; i < cmds.size(); ++i) {
             cout << "function! " << endl;
             if (args.command == cmds[i]) {
-                funcs[i](sd, args.arg_1st, args.arg_2nd);
+                funcs[i](sd, args.key, args.value);
             }
             cout << "i: " << i << endl;
         }
-    } else {
-        write_to_server(sd, "Hello");
+    } 
+    else {
+        usage();
     }
 
     cout << "Closing client: " << getpid() << endl;

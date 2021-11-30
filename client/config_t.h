@@ -24,9 +24,14 @@ struct config_t {
   /** Is the user requesting a usage message? */
   bool usage = false;
 
+  /** API command */
   std::string command = "";
-  std::string arg_1st = "";
-  std::string arg_2nd = "";
+
+  /** Key */
+  std::string key = "";
+
+  /** Value */
+  std::string value = "";
 };
 
 #endif

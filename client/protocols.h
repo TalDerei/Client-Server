@@ -2,6 +2,9 @@
  * @file protocol.h 
  */
 
+#ifndef PROTOCOL_DEF
+#define PROTOCOL_DEF
+
 #pragma once
 
 #include <string>
@@ -23,3 +26,4 @@ const string RES_OK = "OK";
 /* Response code to indicate that there was an error when searching for the given key */
 const string RES_ERR_KEY = "ERR_KEY";
 
+#endif

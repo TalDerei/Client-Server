@@ -1,3 +1,7 @@
+/**
+ * @file server_storage.cc 
+ */
+
 #include <iostream>
 #include <unordered_map>
 #include <utility>
@@ -10,9 +14,10 @@
 
 using namespace std;
 
-/// Storage::Internal is the private struct that holds all of the fields of the
-/// Storage object.  Organizing the fields as an Internal is part of the PIMPL
-/// pattern.
+/**
+ * @brief Storage::Internal is the private struct that holds all of the fields of the
+ * Storage object.  Organizing the fields as an Internal is part of the PIMPL pattern.
+ */
 struct Storage::Internal {
   /// The map of key/value pairs
   // TODO: replace it into MUTEX-lazy-list

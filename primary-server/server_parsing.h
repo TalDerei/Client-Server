@@ -1,10 +1,19 @@
+/**
+ * @file server_parsing.h 
+ */
+
+#ifndef SERVER_PARSING_DEF
+#define SERVER_PARSING_DEF
+
 #include "server_storage.h"
-/// When a new client connection is accepted, this code will run to figure out
-/// what the client is requesting, and to dispatch to the right function for
-/// satisfying the request.
-///
-/// @param sd      The socket on which communication with the client takes place
-/// @param storage The Storage object with which clients interact
-///
-/// @returns true if the server should halt immediately, false otherwise
+
+/**
+ * @brief Serve client connection and execute requested API
+ * 
+ * @param sd      The socket on which communication with the client takes place
+ * @param storage The Storage object with which clients interact
+ * @return true if the server should halt immediately, false otherwise 
+ */
 bool serve_client(int sd, Storage &storage);
+
+#endif

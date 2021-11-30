@@ -2,8 +2,8 @@
  * @file config_t.h 
  */
 
-#ifndef CONFIG_T_DEF
-#define CONFIG_T_DEF
+#ifndef CONFIG_SERVER_DEF
+#define CONFIG_SERVER_DEF
 
 #include <iostream>
 #include <string>

@@ -23,7 +23,7 @@
 
 using namespace std;
 
-template <typename K>
+template <typename K, typename V>
 class lazyList {
     /** Typedef for integer pointer */
     typedef intptr_t val_t;
@@ -87,7 +87,7 @@ void node_delete_l(node_l_t *node) {
     free(node);
 }
 
-void set_delete_l(intset_l_t *set) {
+void set_delete_l() {
     node_l_t *node, *next;
 
     node = set->head;

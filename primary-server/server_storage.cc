@@ -19,7 +19,7 @@ using namespace std;
  */
 struct Storage::Internal {
     /** lazylist object */
-    lazyList<string> lazylist;
+    lazyList<string, string> lazylist;
 
     /** Filename is the name of the file from which the Storage object was loaded,
      * and to which we persist the Storage object every time it changes */
@@ -30,8 +30,8 @@ struct Storage::Internal {
      * 
      * @param fname The name of the file that should be used to load/store the data
      */
-    Internal()
-      : lazylist() {}
+    Internal(string fname)
+      : lazylist(), filename(fname) {}
 };
 
 /**
@@ -39,7 +39,8 @@ struct Storage::Internal {
  * 
  * @param fname The name of the file that should be used to load/store the data
  */
-Storage::Storage(const string &fname) : fields(new Internal()) {}
+Storage::Storage(const string &fname) 
+    : fields(new Internal(fname)) {}
 
 /** 
  *  Destructor for the storage object
@@ -59,7 +60,6 @@ void Storage::init_lazylist() {
  */
 bool Storage::load() { 
     cout << "Need to implement!" << endl;
-    return true; 
 }
 
 /**
@@ -68,15 +68,21 @@ bool Storage::load() {
  * must be written to a temporary file (this.filename.tmp).  Then the
  * temporary file can be renamed to replace the older version of the Storage object
  */
-void Storage::persist() {
-    cout << "Need to implement!" << endl;
+void Storage::persist(const int &key, const int &val) {
+    FILE *f = fopen(fields->filename.c_str(), "w");
+    fwrite (&key, sizeof(int), 1, f);
+    fwrite (&val, sizeof(int), 1, f);
+    fwrite("\n", sizeof(char), 1, f);
+    fclose (f);
+    cout << "Persisted data!" << endl;
 }
 
 /**
  * @brief Shut down the storage when the server stops.
  */
 void Storage::shutdown() {
-    cout << "Need to implement!" << endl;
+    fields->lazylist.set_delete_l();
+    exit(0);
 }
 
 /**
@@ -91,6 +97,7 @@ vec Storage::kv_insert(const int &key, const int &val) {
     val_t val_ptr = (val_t)val;
 
     if (fields->lazylist.parse_insert(key_ptr, val_ptr)) {
+        persist(key, val);
         return vec_from_string(RES_OK);
     }
 
@@ -125,6 +132,7 @@ pair<bool, vec> Storage::kv_delete(const int &key) {
     val_t key_ptr = (val_t)key;
     
     if (fields->lazylist.parse_delete(key_ptr)) {
+        persist(key, 0);
         return {true, vec_from_string(RES_OK)};
     }
 

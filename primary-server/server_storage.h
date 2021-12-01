@@ -60,7 +60,7 @@ public:
      * must be written to a temporary file (this.filename.tmp).  Then the
      * temporary file can be renamed to replace the older version of the Storage object
      */
-    void persist();
+    void persist(const int &key, const int &val);
 
     /**
      * @brief Shut down the storage when the server stops.

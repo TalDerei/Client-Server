@@ -20,6 +20,11 @@ struct config_t {
 
     /** Is the user requesting a usage message? */
     bool usage = false;
+
+    /**
+     * Datafile persisting the lazy list
+     */
+    std::string datafile = "";
 };
 
 #endif

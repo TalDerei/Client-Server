@@ -100,9 +100,9 @@ bool server_cmd_kvd(int sd, const vec &req, Storage &storage) {
     cout << "key: " << key << endl;
 
     /** Call remove() on storage object represented by hash table */
-    vec result = storage.kv_delete(key);
+    std::pair<bool, vec> result = storage.kv_delete(key);
 
     /** Send response to client */
-    send_reliably(sd, result);
+    send_reliably(sd, result.second);
     return false;
 }

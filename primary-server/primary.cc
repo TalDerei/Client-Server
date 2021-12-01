@@ -47,8 +47,10 @@ int main(int argc, char **argv) {
 
     /** If the data file exists, load the data into a Storage object. Otherwise, create an empty Storage object */
     string datafile = "saved_file.txt";
-    int num_buckets = 10;
-    Storage storage(datafile, num_buckets);
+    Storage storage(datafile);
+
+    /** Initialize lazy list data structure */
+    storage.init_lazylist();
 
     /** Accept client connections */
     accept_client(serverSd, [&](int sd) {

@@ -78,11 +78,9 @@ int main(int argc, char **argv) {
         vector<string> cmds = {REQ_KVI, REQ_KVD, REQ_KVG};
         decltype(client_insert) *funcs[] = {client_insert, client_remove, client_contains};
         for (size_t i = 0; i < cmds.size(); ++i) {
-            cout << "function! " << endl;
             if (args.command == cmds[i]) {
                 funcs[i](sd, args.key, args.value);
             }
-            cout << "i: " << i << endl;
         }
     } 
     else {

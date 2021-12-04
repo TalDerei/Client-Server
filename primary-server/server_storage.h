@@ -2,12 +2,18 @@
  * @file server_storage.h
  */
 
+
+#ifndef SERVER_STORAGE_DEF
+#define SERVER_STORAGE_DEF
+
 #pragma once
 
 #include <memory>
 #include <string>
 #include <utility>
 #include "vec.h"
+#include "server_storage.h"
+
 
 /**
  * @brief Storage is the main data type managed by the server.
@@ -67,6 +73,7 @@ public:
      * @brief Shut down the storage when the server stops.
      */
     void shutdown();
+    
     /**
      * @brief  Create a new key/value mapping in the lazy list
      * 
@@ -92,3 +99,5 @@ public:
      */
     std::pair<bool, vec> kv_delete(const int &key);
 };
+
+#endif

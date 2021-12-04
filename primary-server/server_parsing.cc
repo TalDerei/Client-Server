@@ -19,10 +19,13 @@
  * @return true if the server should halt immediately, false otherwise 
  */
 bool serve_client(int sd, Storage &storage) {
+    /* request block */
     vec res(LEN_RKBLOCK);
-    std::cout << "serve_client!" << std::endl;
+
+    /* get request from socket */
     reliable_get_to_eof_or_n(sd, res.begin(), LEN_RKBLOCK);
-    std::cout << "get res!" << std::endl;
+
+    /* recognize API command */
     std::string cmd = "";
     unsigned int j = 0;
     unsigned char alen[4];
@@ -34,12 +37,13 @@ bool serve_client(int sd, Storage &storage) {
             j++;
         }
     }
+
+    /* parse content */
     int alen_int = *(int*) alen;
     vec msg(alen_int);
-    std::cout << "alen_int: " << alen_int << std::endl;
     reliable_get_to_eof_or_n(sd, msg.begin(), alen_int);
-    std::cout << "msg_size: " << msg.size() << std::endl;
 
+    /* execute a command */
     std::vector<std::string> s = {REQ_KVI, REQ_KVG, REQ_KVD};
     decltype(server_cmd_kvi) *cmds[] = {server_cmd_kvi, server_cmd_kvg, server_cmd_kvd};
     for (size_t i = 0; i < s.size(); ++i) {

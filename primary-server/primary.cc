@@ -53,6 +53,9 @@ int main(int argc, char **argv) {
     /** Initialize lazy list data structure */
     storage.init_lazylist();
 
+    /** load data into storage if datafile exists */
+    storage.load();
+
     /** Accept client connections */
     accept_client(serverSd, [&](int sd) {
         return serve_client(sd, storage); 

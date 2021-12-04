@@ -317,3 +317,37 @@ bool send_reliably(int sd, const vec &msg) {
 bool send_reliably(int sd, const string &msg) {
     return reliable_send(sd, (const unsigned char *)msg.c_str(), msg.length());
 }
+
+/**
+ * Connect to a server so that we can have bidirectional communication on the
+ * socket (represented by a file descriptor) that this function returns
+ *
+ * @param hostname The name of the server (ip or DNS) to connect to
+ * @param port     The server's port that we should use
+ */
+int connect_to_server(std::string hostname, std::size_t port) {
+    /** Figure out IP addresses and put it in a sockaddr_in */
+    struct hostent *host = gethostbyname(hostname.c_str());
+
+    if (host == nullptr) {
+        cout << "connect_to_server():DNS error: " << hstrerror(h_errno) << endl;
+        exit(0);
+    }
+
+    sockaddr_in addr;
+    memset(&addr, 0, sizeof(addr));
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr *)*host->h_addr_list));
+    addr.sin_port = htons(port);
+
+    /** Create socket and try to connect to it */
+    int sd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sd < 0) {
+        error_message_and_exit(0, errno, "Error making client socket: ");
+    }
+    if (connect(sd, (sockaddr *)&addr, sizeof(addr)) < 0) {
+        close(sd);
+        error_message_and_exit(0, errno, "Error connecting socket to address: ");
+    }
+    return sd;
+}

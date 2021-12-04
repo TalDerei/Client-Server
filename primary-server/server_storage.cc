@@ -11,6 +11,7 @@
 #include "server_storage.h"
 #include "../lazy-list/lazyList.h"
 #include "file.h"
+#include "gateway.h"
 
 using namespace std;
 
@@ -21,6 +22,9 @@ using namespace std;
 struct Storage::Internal {
     /** lazylist object */
     lazyList<string, string> lazylist;
+
+    /* gateway object */
+    Gateway gateway;
 
     /** Filename is the name of the file from which the Storage object was loaded,
      * and to which we persist the Storage object every time it changes */
@@ -39,7 +43,7 @@ struct Storage::Internal {
      * @param fname The name of the file that should be used to load/store the data
      */
     Internal(string fname)
-      : lazylist(), filename(fname) {}
+      : lazylist(), gateway(), filename(fname) {}
 };
 
 
@@ -61,6 +65,11 @@ Storage::~Storage() = default;
 /** Initialize lazy list data structure */
 void Storage::init_lazylist() {
     fields->lazylist.initialize();
+}
+
+/** Initialize communication object between servers */
+void Storage::connect_to_backup_server() {
+    fields->gateway.connect_to_backup_server();
 }
 
 /**

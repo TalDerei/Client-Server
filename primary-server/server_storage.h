@@ -53,6 +53,9 @@ public:
     /** Initialize lazy list data structure */
     void init_lazylist();
 
+    /** Initialize communication object between servers */
+    void connect_to_backup_server();
+
     /**
      * @brief Populate the Storage object by loading this.filename. 
      * @return false if any error is encountered in the file, and true 

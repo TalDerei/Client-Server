@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <sys/time.h>
+#include <netdb.h>
 
 #include "vec.h"
 #include <functional>
@@ -124,5 +125,14 @@ bool send_reliably(int sd, const vec &msg);
  * @return True if the whole string was sent, false otherwise 
  */
 bool send_reliably(int sd, const std::string &msg);
+
+/**
+ * @brief Connect to primary or backup server
+ *
+ * @param name The name of the server (ip or DNS) to connect to
+ * @param port The server's port that we shoul duse
+ * @return     int
+ */
+int connect_to_server(std::string name, size_t port);
 
 #endif

@@ -66,14 +66,13 @@ public:
      * must be written to a temporary file (this.filename.tmp).  Then the
      * temporary file can be renamed to replace the older version of the Storage object
      */
-    void persist();
     void persist(std::string cmd, const int &key, const int &val);
 
     /**
      * @brief Shut down the storage when the server stops.
      */
     void shutdown();
-    
+
     /**
      * @brief  Create a new key/value mapping in the lazy list
      * 

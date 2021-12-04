@@ -138,11 +138,6 @@ bool Storage::load() {
  * must be written to a temporary file (this.filename.tmp).  Then the
  * temporary file can be renamed to replace the older version of the Storage object
  */
-void Storage::persist() {
-    FILE *f = fopen(fields->filename.c_str(), "w+");
-    fclose(f);
-}
-
 void Storage::persist(string prefix, const int &key, const int &val) {
     fputs(prefix.c_str(), fields->fp);
     fwrite (&key, sizeof(int), 1, fields->fp);

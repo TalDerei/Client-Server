@@ -33,6 +33,9 @@ struct Storage::Internal {
     /* file pointer to keep file open */
     FILE* fp = nullptr;
 
+    /* is backup server? */
+    bool is_backup = false;
+
     /* API commands in file as an unique 8-byte code */
     inline static const string KVINSERT = "KVINSERT";
     inline static const string KVDELETE = "KVDELETE";
@@ -67,9 +70,8 @@ void Storage::init_lazylist() {
     fields->lazylist.initialize();
 }
 
-/** Initialize communication object between servers */
-void Storage::connect_to_backup_server() {
-    fields->gateway.connect_to_backup_server();
+bool Storage::is_backup() {
+    return fields->is_backup;
 }
 
 /**
@@ -151,7 +153,6 @@ void Storage::persist(string prefix, const int &key, const int &val) {
     fputs(prefix.c_str(), fields->fp);
     fwrite (&key, sizeof(int), 1, fields->fp);
     fwrite (&val, sizeof(int), 1, fields->fp);
-    //fwrite("\n", sizeof(char), 1, fields->fp);
     fflush(fields->fp);
     cout << "persisted data!" << endl;
 }
@@ -171,19 +172,23 @@ void Storage::shutdown() {
  * @param val  The value to copy into the lazy list
  * @return A vec with the result message 
  */
-vec Storage::kv_insert(const int &key, const int &val) {
+vec Storage::kv_insert(const int &key, const int &val, bool from_primer) {
+    if (fields->is_backup && !from_primer) return vec_from_string(RES_ERR_INVALID);
     val_t key_ptr = (val_t)key;
     val_t val_ptr = (val_t)val;
 
     cout << "kv_insert function!" << endl;
+    cout << "is from PVI? " << from_primer << endl;
     if (fields->lazylist.parse_insert(key_ptr, val_ptr)) {
-        cout << "persist!" << endl;
-        persist(fields->KVINSERT, key, val);
-        cout << "wrote file..." << endl;
+        if (!fields->is_backup) {
+            persist(fields->KVINSERT, key, val);
+            fields->gateway.send_message(REQ_PVI, key, val);
+        }
         return vec_from_string(RES_OK);
     }
     return vec_from_string(RES_ERR_KEY);
 };
+
 
 /**
  * @brief Get a copy of the value to which a key is mapped
@@ -209,11 +214,15 @@ pair<bool, vec> Storage::kv_get(const int &key) {
  * @param key The key whose value is being deleted
  * @return vec 
  */
-pair<bool, vec> Storage::kv_delete(const int &key) {
+pair<bool, vec> Storage::kv_delete(const int &key, bool from_primer) {
+    if (fields->is_backup && !from_primer) return {false, vec_from_string(RES_ERR_INVALID)};
     val_t key_ptr = (val_t)key;
     
     if (fields->lazylist.parse_delete(key_ptr)) {
-        persist(fields->KVDELETE, key, 0);
+        if (!fields->is_backup) {
+            persist(fields->KVDELETE, key, 0);
+            fields->gateway.send_message(REQ_PVD, key);
+        }
         return {true, vec_from_string(RES_OK)};
     }
 

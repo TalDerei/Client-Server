@@ -7,6 +7,59 @@
 
 using namespace std;
 
+
+/* update API call from primary server */
+bool server_cmd_pvi(int sd, const vec &req, Storage &storage) {
+    /** same as server_cmd_kvi */
+    std::string key_str = "";
+    std::string val_str = "";
+    unsigned char ulen[4] = {req.at(0), req.at(1), req.at(2), req.at(3)};
+    int usize = *(int*) ulen;
+    for (int i=4; i < usize+4; i++) {
+        key_str += req[i];
+    }
+    unsigned char plen[4] = {req.at(usize+4), req.at(usize+5), req.at(usize+6), req.at(usize+7)};
+    int psize = *(int*) plen;
+    for (int i = usize+8; i < usize+8+psize; i++) {
+        val_str += req[i];
+    }
+    int key = stoi(key_str);
+    int val = stoi(val_str);
+    /***************************/
+    std::cout << "PVI!" << std::endl;
+    std::cout << "key: " << key << std::endl;
+    std::cout << "val: " << val << std::endl;
+
+    /** Call insert() on storage object represented by hash table */
+    bool from_primer = true;
+    vec status = storage.kv_insert(key, val, from_primer);
+
+    /** Send response to client */
+    send_reliably(sd, status);
+    return false;
+}
+
+bool server_cmd_pvd(int sd, const vec &req, Storage &storage) {
+    /** same as server_cmd_kvd */
+    std::string key_str = "";
+    unsigned char ulen[4] = {req.at(0), req.at(1), req.at(2), req.at(3)};
+    int usize = *(int*) ulen;
+    for (int i=4; i < usize+4; i++) {
+        key_str += req[i];
+    }
+    int key = stoi(key_str);
+    /***************************/
+
+    /** Call remove() on storage object represented by hash table */
+    bool from_primer = true;
+    std::pair<bool, vec> result = storage.kv_delete(key, from_primer);
+
+    /** Send response to client */
+    send_reliably(sd, result.second);
+    return false;
+}
+
+
 /**
  * @brief Server command servering the Insert API call 
  * 
@@ -40,7 +93,8 @@ bool server_cmd_kvi(int sd, const vec &req, Storage &storage) {
     cout << "Value: " << val << endl;
 
     /** Call insert() on storage object represented by hash table */
-    vec status = storage.kv_insert(key, val);
+    bool from_primer = false;
+    vec status = storage.kv_insert(key, val, from_primer);
 
     /** Send response to client */
     cout << "Sending response to client..." << endl;
@@ -100,7 +154,8 @@ bool server_cmd_kvd(int sd, const vec &req, Storage &storage) {
     cout << "key: " << key << endl;
 
     /** Call remove() on storage object represented by hash table */
-    std::pair<bool, vec> result = storage.kv_delete(key);
+    bool from_primer = false;
+    std::pair<bool, vec> result = storage.kv_delete(key, from_primer);
 
     /** Send response to client */
     send_reliably(sd, result.second);

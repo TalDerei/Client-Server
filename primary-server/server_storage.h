@@ -53,8 +53,8 @@ public:
     /** Initialize lazy list data structure */
     void init_lazylist();
 
-    /** Initialize communication object between servers */
-    void connect_to_backup_server();
+    /* is it backup server? */
+    bool is_backup();
 
     /**
      * @brief Populate the Storage object by loading this.filename. 
@@ -83,7 +83,7 @@ public:
      * @param val  The value to copy into the lazy list
      * @return A vec with the result message 
      */
-    vec kv_insert(const int &key, const int &val);
+    vec kv_insert(const int &key, const int &val, bool from_primer);
 
     /**
      * @brief Get a copy of the value to which a key is mapped
@@ -99,7 +99,7 @@ public:
      * @param key The key whose value is being deleted
      * @return vec 
      */
-    std::pair<bool, vec> kv_delete(const int &key);
+    std::pair<bool, vec> kv_delete(const int &key, bool from_primer);
 };
 
 #endif

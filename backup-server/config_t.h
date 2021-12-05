@@ -2,8 +2,8 @@
  * @file config_t.h 
  */
 
-#ifndef CONFIG_T_DEF
-#define CONFIG_T_DEF
+#ifndef CONFIG_SERVER_DEF
+#define CONFIG_SERVER_DEF
 
 #include <iostream>
 #include <string>
@@ -20,6 +20,14 @@ struct config_t {
 
     /** Is the user requesting a usage message? */
     bool usage = false;
+
+    /**
+     * Datafile persisting the lazy list
+     */
+    std::string datafile = "";
+
+    /** Thread count */
+    int threads = 2;
 };
 
 #endif

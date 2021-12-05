@@ -275,27 +275,34 @@ void accept_client(int sd, function<bool(int)> handler) {
  * @param pool  The thread pool that handles new requests
  */
 void accept_client(int sd, thread_pool &pool) {
-    // Use accept() to wait for a client to connect.  When it connects, service
-    // it.  When it disconnects, then and only then will we accept a new client.
-    while (true) {
-        cout << "Waiting for a client to connect...\n";
-        sockaddr_in clientAddr = {0};
-        socklen_t clientAddrSize = sizeof(clientAddr);
-        int connSd = accept(sd, (sockaddr *)&clientAddr, &clientAddrSize);
-        if (connSd < 0) {
-            close(sd);
-            sys_error(errno, "Error accepting request from client: ");
-            return;
-        }
-        char clientname[1024];
-        cout << "Connected to "
-             << inet_ntop(AF_INET, &clientAddr.sin_addr, clientname,
-                          sizeof(clientname))
-             << endl;
-        pool.service_connection(connSd);
-        // NB: ignore errors in close()
-        close(connSd);
+    cout << "Entered accept_client!" << endl;
+  atomic<bool> safe_shutdown(false);
+  pool.set_shutdown_handler([&]() {
+    safe_shutdown = true;
+    shutdown(sd, SHUT_RDWR);
+  });
+  // Use accept() to wait for a client to connect.  When it connects, service
+  // it.  When it disconnects, then and only then will we accept a new client.
+  while (pool.check_active()) {
+    cout << "Waiting for a client to connect...\n";
+    sockaddr_in clientAddr = {0};
+    socklen_t clientAddrSize = sizeof(clientAddr);
+    int connSd = accept(sd, (sockaddr *)&clientAddr, &clientAddrSize);
+    if (connSd < 0) {
+      // If safe_shutdown() was called, and it's EINVAL, then the pool has been
+      // halted, and the listening socket closed, so don't print an error.
+      if (errno != EINVAL || !safe_shutdown)
+        sys_error(errno, "Error accepting request from client: ");
+      return;
     }
+    char clientname[1024];
+    cout << "Connected to "
+         << inet_ntop(AF_INET, &clientAddr.sin_addr, clientname,
+                      sizeof(clientname))
+         << endl;
+    pool.service_connection(connSd);
+    cout << "Exited accept_client!" << endl;
+  }
 }
 
 /**

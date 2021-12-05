@@ -35,6 +35,7 @@ void parseargs(int argc, char** argv, config_t& config) {
             case 's': config.server_name = std::string(optarg); break;
             case 'p': config.port = atoi(optarg); break;  
             case 'f': config.datafile = std::string(optarg); break;
+            case 't': config.port = atoi(optarg); break;  
             case 'h': usage(); break;
         }
     }

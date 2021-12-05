@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <sys/time.h>
 #include <netdb.h>
+#include <atomic>
 
 #include "vec.h"
 #include "pool.h"

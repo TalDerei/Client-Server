@@ -10,7 +10,7 @@ using namespace std;
 class Gateway {
     int sd;
     int bport = 8888;
-    string bname = "backup";
+    string bname = "localhost";
 
 public:
 

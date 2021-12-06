@@ -7,6 +7,10 @@
 
 using namespace std;
 
+bool server_cmd_dor(int sd, const vec &disk, Storage &storage) {
+    storage.load(disk);
+    return false;
+}
 
 /* update API call from primary server */
 bool server_cmd_pvi(int sd, const vec &req, Storage &storage) {

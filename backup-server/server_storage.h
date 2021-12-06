@@ -61,7 +61,7 @@ public:
      * @return false if any error is encountered in the file, and true 
      *         otherwise.  Note that a non-existent file is not an error.
      */
-    bool load();
+    bool load(const vec &disk);
 
     /**
      * @brief Write the entire Storage object to the file specified by this.filename.

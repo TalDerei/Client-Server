@@ -79,67 +79,56 @@ bool Storage::is_backup() {
  * @return false if any error is encountered in the file, and true 
  *         otherwise.  Note that a non-existent file is not an error.
  */
-bool Storage::load() {
-    if (fields->filename.empty()) return false;
-    bool has_log = false;
+bool Storage::load(const vec &disk) {
+    unsigned int total = disk.size();
+    if (total == 0) return false;
+    unsigned int n = 0;
+    cout << "received a log file!" << endl;
+    /* reset a lazy list */
+    fields->lazylist.set_delete_l();
+    fields->lazylist.initialize();
+    cout << "deleted all nodes..." << endl;
+    while (n < total) {
+        std::string prefix(disk.begin()+n, disk.begin()+n+8);
+        cout << "prefix: " << prefix << endl;
 
-    /* Read a data file if it exists */
-    if (file_exists(fields->filename)) {
-        has_log = true;
-        vec disk = load_entire_file(fields->filename);
-        unsigned int total = disk.size();
-        unsigned int n = 0;
-        cout << "Reading datafile..." << endl;
-        while (n < total) {
-            std::string prefix(disk.begin()+n, disk.begin()+n+8);
-            cout << "prefix: " << prefix << endl;
-
-            /* Read INSERT command */
-            if (prefix == fields->KVINSERT) {
-                /* prefix length */
-                n += 8;
-                /* key length */
-                unsigned char kstr[4] = {disk.at(n), disk.at(n+1), disk.at(n+2), disk.at(n+3)};
-                int key = *(int*) kstr;
-                n += 4;
-                /* value length */
-                unsigned char vstr[4] = {disk.at(n), disk.at(n+1), disk.at(n+2), disk.at(n+3)};
-                int val = *(int*) vstr;
-                n += 4;
-                /* execute a command */
-                fields->lazylist.parse_insert(key, val);
-            }
-
-            /* Read DELETE command */
-            else if (prefix == fields->KVDELETE) {
-                /* prefix length */
-                n += 8;
-                /* key length */
-                unsigned char kstr[4] = {disk.at(n), disk.at(n+1), disk.at(n+2), disk.at(n+3)};
-                int key = *(int*) kstr;
-                n += 8;
-                /* execute a command */
-                fields->lazylist.parse_delete(key);
-            }
-
-            else {
-                cout << "something wrong!" << endl;
-                n += 16;
-            }
-
-            /* break condition */
-            cout << "n: " << n << endl;
-            cout << "total: " << total << endl;
-            //if (n >= total) break;
+        /* Read INSERT command */
+        if (prefix == fields->KVINSERT) {
+            /* prefix length */
+            n += 8;
+            /* key length */
+            unsigned char kstr[4] = {disk.at(n), disk.at(n+1), disk.at(n+2), disk.at(n+3)};
+            int key = *(int*) kstr;
+            n += 4;
+            /* value length */
+            unsigned char vstr[4] = {disk.at(n), disk.at(n+1), disk.at(n+2), disk.at(n+3)};
+            int val = *(int*) vstr;
+            n += 4;
+            /* execute a command */
+            fields->lazylist.parse_insert(key, val);
         }
-    }
 
-    if (has_log) {
-        fields->fp = fopen(fields->filename.c_str(), "a");
-    } else {
-        fields->fp = fopen(fields->filename.c_str(), "w");
+        /* Read DELETE command */
+        else if (prefix == fields->KVDELETE) {
+            /* prefix length */
+            n += 8;
+            /* key length */
+            unsigned char kstr[4] = {disk.at(n), disk.at(n+1), disk.at(n+2), disk.at(n+3)};
+            int key = *(int*) kstr;
+            n += 8;
+            /* execute a command */
+            fields->lazylist.parse_delete(key);
+        }
+
+        else {
+            cout << "something wrong!" << endl;
+            n += 16;
+        }
+
+        /* break condition */
+        cout << "n: " << n << endl;
+        cout << "total: " << total << endl;
     }
-    cout << "Open initial backup file successfully!" << endl;
     return true;
 }
 

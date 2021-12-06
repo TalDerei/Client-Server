@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
     storage.init_lazylist();
 
     /** load data into storage if datafile exists */
-    storage.load();
+    //storage.load();
 
     thread_pool pool(args.threads, [&](int sd) { 
         return serve_client(sd, storage); 

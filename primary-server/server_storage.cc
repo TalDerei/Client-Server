@@ -90,7 +90,7 @@ bool Storage::load() {
         unsigned int total = disk.size();
         unsigned int n = 0;
         cout << "Reading datafile..." << endl;
-        while (true) {
+        while (n < total) {
             std::string prefix(disk.begin()+n, disk.begin()+n+8);
             cout << "prefix: " << prefix << endl;
 
@@ -130,7 +130,7 @@ bool Storage::load() {
             /* break condition */
             cout << "n: " << n << endl;
             cout << "total: " << total << endl;
-            if (n >= total) break;
+            //if (n >= total) break;
         }
     }
 

@@ -343,11 +343,13 @@ int connect_to_server(std::string hostname, std::size_t port) {
     /** Create socket and try to connect to it */
     int sd = socket(AF_INET, SOCK_STREAM, 0);
     if (sd < 0) {
-        error_message_and_exit(0, errno, "Error making client socket: ");
+        //error_message_and_exit(0, errno, "Error making client socket: ");
+        sys_error(errno, "Error making client socket: ");
     }
     if (connect(sd, (sockaddr *)&addr, sizeof(addr)) < 0) {
         close(sd);
-        error_message_and_exit(0, errno, "Error connecting socket to address: ");
+        //error_message_and_exit(0, errno, "Error connecting socket to address: ");
+        sys_error(errno, "Error connecting socket to address: ");
     }
     return sd;
 }

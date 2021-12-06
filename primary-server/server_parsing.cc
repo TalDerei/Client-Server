@@ -43,6 +43,11 @@ bool serve_client(int sd, Storage &storage) {
     vec msg(alen_int);
     reliable_get_to_eof_or_n(sd, msg.begin(), alen_int);
 
+    /** If there's a recovery request from backup server, send log */
+    if (cmd == "ROR") {
+        storage.do_request();
+    }
+
     /* execute a command */
     std::vector<std::string> s = {REQ_KVI, REQ_KVG, REQ_KVD};
     decltype(server_cmd_kvi) *cmds[] = {server_cmd_kvi, server_cmd_kvg, server_cmd_kvd};

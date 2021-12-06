@@ -56,6 +56,10 @@ public:
     /* is it backup server? */
     bool is_backup();
 
+
+    /** Request log from primary seerver */
+    bool do_request();
+
     /**
      * @brief Populate the Storage object by loading this.filename. 
      * @return false if any error is encountered in the file, and true 

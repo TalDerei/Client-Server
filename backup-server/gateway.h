@@ -9,7 +9,7 @@ using namespace std;
 
 class Gateway {
     int sd;
-    int bport = 8888;
+    int bport = 9999;
     string bname = "localhost";
 
 public:
@@ -17,7 +17,7 @@ public:
 /** Default constructor */
     Gateway() {}
 
-/** send the message to backup server */
+/** send the message to primary server */
     vec communicate(const vec &req) {
         cout << "test gateway!" << endl;
         cout << "size: " << req.size() << endl;

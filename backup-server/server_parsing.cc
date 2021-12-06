@@ -44,8 +44,8 @@ bool serve_client(int sd, Storage &storage) {
     reliable_get_to_eof_or_n(sd, msg.begin(), alen_int);
 
     /* execute a command */
-    std::vector<std::string> s = {REQ_KVI, REQ_KVG, REQ_KVD};
-    decltype(server_cmd_kvi) *cmds[] = {server_cmd_kvi, server_cmd_kvg, server_cmd_kvd};
+    std::vector<std::string> s = {REQ_KVI, REQ_KVG, REQ_KVD, REQ_PVI, REQ_PVD, REQ_DOR};
+    decltype(server_cmd_kvi) *cmds[] = {server_cmd_kvi, server_cmd_kvg, server_cmd_kvd, server_cmd_pvi, server_cmd_pvd, server_cmd_dor};
     for (size_t i = 0; i < s.size(); ++i) {
         if (cmd == s[i]) {
             return cmds[i](sd, msg, storage);

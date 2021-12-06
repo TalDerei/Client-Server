@@ -88,9 +88,10 @@ bool Storage::load() {
         has_log = true;
         vec disk = load_entire_file(fields->filename);
         unsigned int total = disk.size();
-        unsigned int n = 0;
+        if (total > 0) fields->gateway.send_file(REQ_DOR, disk);
         cout << "Reading datafile..." << endl;
-        while (true) {
+        unsigned int n = 0;
+        while (n < total) {
             std::string prefix(disk.begin()+n, disk.begin()+n+8);
             cout << "prefix: " << prefix << endl;
 
@@ -130,10 +131,9 @@ bool Storage::load() {
             /* break condition */
             cout << "n: " << n << endl;
             cout << "total: " << total << endl;
-            if (n >= total) break;
+            //if (n >= total) break;
         }
     }
-
     if (has_log) {
         fields->fp = fopen(fields->filename.c_str(), "a");
     } else {

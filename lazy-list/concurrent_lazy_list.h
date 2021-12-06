@@ -23,19 +23,12 @@
 
 using namespace std;
 
-#ifdef MUTEX
 typedef pthread_mutex_t ptlock_t;
 #  define INIT_LOCK(lock)				pthread_mutex_init((pthread_mutex_t *) lock, NULL);
 #  define DESTROY_LOCK(lock)			pthread_mutex_destroy((pthread_mutex_t *) lock)
 #  define LOCK(lock)					pthread_mutex_lock((pthread_mutex_t *) lock)
 #  define UNLOCK(lock)					pthread_mutex_unlock((pthread_mutex_t *) lock)
-#else
-typedef pthread_spinlock_t ptlock_t;
-#  define INIT_LOCK(lock)				pthread_spin_init((pthread_spinlock_t *) lock, PTHREAD_PROCESS_PRIVATE);
-#  define DESTROY_LOCK(lock)			pthread_spin_destroy((pthread_spinlock_t *) lock)
-#  define LOCK(lock)					pthread_spin_lock((pthread_spinlock_t *) lock)
-#  define UNLOCK(lock)					pthread_spin_unlock((pthread_spinlock_t *) lock)
-#endif
+
 
 template <typename K, typename V>
 class lazyList {
@@ -47,6 +40,7 @@ class lazyList {
         val_t key;
         val_t val;
         struct node_l *next;
+        volatile ptlock_t lock;
     } node_l_t;
 
     /** intset_l struct represents head of lazy list */

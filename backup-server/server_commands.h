@@ -10,6 +10,12 @@
 #include "vec.h"
 #include "server_storage.h"
 
+/* update API call from primary server */
+bool server_cmd_pvi(int sd, const vec &req, Storage &storage);
+bool server_cmd_pvd(int sd, const vec &req, Storage &storage);
+bool server_cmd_dor(int sd, const vec &disk, Storage &storage);
+
+
 /**
  * @brief Server command servering the Insert API call 
  * 

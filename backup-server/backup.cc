@@ -35,7 +35,7 @@ void parseargs(int argc, char** argv, config_t& config) {
             case 's': config.server_name = std::string(optarg); break;
             case 'p': config.port = atoi(optarg); break;  
             case 'f': config.datafile = std::string(optarg); break;
-            case 't': config.port = atoi(optarg); break;  
+            case 't': config.threads = atoi(optarg); break;  
             case 'h': usage(); break;
         }
     }
@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
     storage.init_lazylist();
 
     /** load data into storage if datafile exists */
-    storage.load();
+    //storage.load();
 
     thread_pool pool(args.threads, [&](int sd) { 
         return serve_client(sd, storage); 

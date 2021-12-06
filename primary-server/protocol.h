@@ -16,6 +16,7 @@ const string REQ_KVG = "KVG";
 const string REQ_KVD = "KVD";
 const string REQ_PVI = "PVI";
 const string REQ_PVD = "PVD";
+const string REQ_DOR = "DOR";
 
 /** Response code to indicate that the command was successful */
 const string RES_OK = "OK";

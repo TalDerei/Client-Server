@@ -57,7 +57,11 @@ public:
     bool is_backup();
 
     /** Send log files to backup upon backup server crash/restart */
-    void do_request();
+    //void do_request();
+    //bool do_request();
+
+    vec load_disk();
+    //bool send_file(const vec &disk);
 
     /**
      * @brief Populate the Storage object by loading this.filename. 

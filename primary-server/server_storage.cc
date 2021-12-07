@@ -74,12 +74,9 @@ bool Storage::is_backup() {
     return fields->is_backup;
 }
 
-void Storage::do_request() {
+vec Storage::load_disk() {
     vec disk = load_entire_file(fields->filename);
-    unsigned int total = disk.size();
-    if (total > 0) {
-        fields->gateway.send_file(REQ_DOR, disk);
-    }
+    return disk;
 }
 
 /**

@@ -56,7 +56,6 @@ public:
     /* is it backup server? */
     bool is_backup();
 
-
     /** Request log from primary seerver */
     bool do_request();
 

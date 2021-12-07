@@ -17,6 +17,7 @@ const int LEN_RKBLOCK = 7;
 const string REQ_KVI = "KVI";
 const string REQ_KVG = "KVG";
 const string REQ_KVD = "KVD";
+const string REQ_ROR = "ROR";
 
 /** Response code to indicate that the command was successful */
 const string RES_OK = "OK";

@@ -78,11 +78,11 @@ bool Storage::is_backup() {
 /**
  * Backup server requesting log from primary server
  */
+
 bool Storage::do_request() {
-    vec msg;
-    vec_append(msg, REQ_ROR);
-    fields->gateway.communicate(msg);
-    // this->load(disk);
+    vec res = fields->gateway.send_message(REQ_ROR, 0);
+    load(res);
+    return true;
 }
 
 /**

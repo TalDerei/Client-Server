@@ -30,6 +30,19 @@ public:
         return res;
     }
 
+    vec send_file(const string &cmd, const vec &disk) {
+        vec req;
+
+        /* set up request */
+        vec_append(req, cmd);
+        vec_append(req, disk.size());
+        vec_append(req, disk);
+
+        /* send via socket */
+        vec res = communicate(req);
+        return res;
+    }
+
     vec send_message(const string &cmd, const int &key) {
         std::cout << "send_message(PVD?)" << cmd << std::endl;
         vec req;

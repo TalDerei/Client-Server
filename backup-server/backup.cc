@@ -32,7 +32,7 @@ void usage() {
  */
 void parseargs(int argc, char** argv, config_t& config) {
     long opt;
-    while ((opt = getopt(argc, argv, "s:p:f:t:h")) != -1) {
+    while ((opt = getopt(argc, argv, "s:p:f:t:C:h")) != -1) {
         switch (opt) {
             case 's': config.server_name = std::string(optarg); break;
             case 'p': config.port = atoi(optarg); break;  

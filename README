@@ -1,0 +1,15 @@
+TEST example
+./primary-server/obj64/primary.exe -s localhost -p 9999 -f persist.dat
+./backup-server/obj64/backup.exe -s localhost -p 8888 -t 2
+./client/obj64/client.exe -s localhost -p 9999 -C KVI -k 5 -v 5     (returns TRUE)
+./client/obj64/client.exe -s localhost -p 9999 -C KVI -k 5 -v 5     (returns FALSE)
+./client/obj64/client.exe -s localhost -p 9999 -C KVI -k 6 -v 6     (returns TRUE)
+./client/obj64/client.exe -s localhost -p 8888 -C KVI -k 5 -v 5     (returns INVALID)
+./client/obj64/client.exe -s localhost -p 9999 -C KVG -k 5          (returns TRUE)
+./client/obj64/client.exe -s localhost -p 8888 -C KVG -k 5          (returns TRUE)
+(close primary-server)
+./primary-server/obj64/primary.exe -s localhost -p 9999 -f persist.dat
+./client/obj64/client.exe -s localhost -p 9999 -C KVG -k 5          (returns TRUE)
+(close backup-server)
+./backup-server/obj64/backup.exe -s localhost -p 8888 -t 2 -C ROR
+./client/obj64/client.exe -s localhost -p 8888 -C KVG -k 5          (returns TRUE)

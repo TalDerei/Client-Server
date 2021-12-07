@@ -81,7 +81,10 @@ bool Storage::is_backup() {
 
 bool Storage::do_request() {
     vec res = fields->gateway.send_message(REQ_ROR, 0);
+    mutex m;
+    m.lock();
     load(res);
+    m.unlock();
     return true;
 }
 

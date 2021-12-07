@@ -11,7 +11,10 @@ using namespace std;
  * Backup server loading log file from primary seerver (after primary server crashes/restarts) 
  */
 bool server_cmd_dor(int sd, const vec &disk, Storage &storage) {
+    mutex m;
+    m.lock();
     storage.load(disk);
+    m.unlock();
     return false;
 }
 

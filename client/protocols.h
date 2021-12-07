@@ -19,10 +19,10 @@ const string REQ_KVG = "KVG";
 const string REQ_KVD = "KVD";
 
 /** Response code to indicate that the command was successful */
-const string RES_OK = "OK";
+const string RES_OK = "TRUE";
 
 /* Response code to indicate that there was an error when searching for the given key */
-const string RES_ERR_KEY = "ERR_KEY";
+const string RES_ERR_KEY = "FALSE";
 const string RES_ERR_INVALID = "INVALID";
 
 #endif

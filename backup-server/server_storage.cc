@@ -5,6 +5,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <utility>
+#include <mutex>
 
 #include "protocol.h"
 #include "vec.h"

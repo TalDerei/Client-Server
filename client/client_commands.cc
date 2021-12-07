@@ -27,10 +27,6 @@ vec client_send_cmd(int sd, const string &cmd, const vec &msg) {
     vec_append(req, cmd);
     vec_append(req, msg.size());
     vec_append(req, msg);
-    cout << "req.size(): " << req.size() << endl;
-    for (unsigned int i=0; i < req.size(); i++) {
-        cout << "req: " << req.at(i) << endl;
-    }
 
     /** Send vector packet to server on specified socket descriptor */
     send_reliably(sd, req);
@@ -47,8 +43,6 @@ vec client_send_cmd(int sd, const string &cmd, const vec &msg) {
  */
 void client_insert(int sd, const string &key, const string &val) {
     /** Key/Value pair */
-    cout << "Client Key: " << key << endl;
-    cout << "Client Val: " << val << endl;  
 
     /** Append key/value to msg vector */
     vec msg;
@@ -57,10 +51,11 @@ void client_insert(int sd, const string &key, const string &val) {
     vec_append(msg, val.length());
     vec_append(msg, val);
     auto res = client_send_cmd(sd, REQ_KVI, msg);
+    string res_str = "";
     for (unsigned int i = 0; i < res.size(); i++) {
-        cout << "res[i]: " << res.at(i) << endl;
+        res_str += res.at(i);
     }
-    //check_err_response(res);
+    cout << res_str << endl;
 }
 
 /**
@@ -76,10 +71,11 @@ void client_remove(int sd, const string &key, const string &val) {
     vec_append(msg, key.length());
     vec_append(msg, key);
     auto res = client_send_cmd(sd, REQ_KVD, msg);
+    string res_str = "";
     for (unsigned int i = 0; i < res.size(); i++) {
-        cout << "res[i]: " << res.at(i) << endl;
+        res_str += res.at(i);
     }
-    //check_err_response(res);
+    cout << res_str << endl;
 }
 
 /**
@@ -95,8 +91,9 @@ void client_contains(int sd, const string &key, const string &val) {
     vec_append(msg, key.length());
     vec_append(msg, key);
     auto res = client_send_cmd(sd, REQ_KVG, msg);
+    string res_str = "";
     for (unsigned int i = 0; i < res.size(); i++) {
-        cout << "res[i]: " << res.at(i) << endl;
+        res_str += res.at(i);
     }
-    //check_err_response(res);
+    cout << res_str << endl;
 }

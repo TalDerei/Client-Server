@@ -74,6 +74,11 @@ bool Storage::is_backup() {
     return fields->is_backup;
 }
 
+vec Storage::load_disk() {
+    vec disk = load_entire_file(fields->filename);
+    return disk;
+}
+
 /**
  * @brief Populate the Storage object by loading this.filename. 
  * @return false if any error is encountered in the file, and true 

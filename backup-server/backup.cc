@@ -17,6 +17,8 @@ using namespace std;
 void usage() {
     cout << "  -s [string] Name of the server (probably 'localhost')" << endl;
     cout << "  -p [int]    Port number of the server" << endl;
+    cout << "  -C [string]  Recovery API Command" << endl;
+    cout << "                   ROR (request log)" << endl;
     cout << "  -h          Print help (this message)" << endl;
 }
 
@@ -30,12 +32,13 @@ void usage() {
  */
 void parseargs(int argc, char** argv, config_t& config) {
     long opt;
-    while ((opt = getopt(argc, argv, "s:p:f:t:h")) != -1) {
+    while ((opt = getopt(argc, argv, "s:p:f:t:C:h")) != -1) {
         switch (opt) {
             case 's': config.server_name = std::string(optarg); break;
             case 'p': config.port = atoi(optarg); break;  
             case 'f': config.datafile = std::string(optarg); break;
             case 't': config.threads = atoi(optarg); break;  
+            case 'C': config.command = std::string(optarg); break;  
             case 'h': usage(); break;
         }
     }
@@ -59,9 +62,12 @@ int main(int argc, char **argv) {
     /** Initialize lazy list data structure */
     storage.init_lazylist();
 
-    /** load data into storage if datafile exists */
-    //storage.load();
+    /** Request log file from primary server if backup server crashes/restarts */
+    if (args.command == "ROR") {
+        storage.do_request();
+    }
 
+    /** Thread pool */
     thread_pool pool(args.threads, [&](int sd) { 
         return serve_client(sd, storage); 
     });

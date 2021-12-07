@@ -13,6 +13,7 @@
 #include "file.h"
 #include "gateway.h"
 
+
 using namespace std;
 
 /**
@@ -72,6 +73,16 @@ void Storage::init_lazylist() {
 
 bool Storage::is_backup() {
     return fields->is_backup;
+}
+
+/**
+ * Backup server requesting log from primary server
+ */
+
+bool Storage::do_request() {
+    vec res = fields->gateway.send_message(REQ_ROR, 0);
+    load(res);
+    return true;
 }
 
 /**
@@ -217,3 +228,6 @@ pair<bool, vec> Storage::kv_delete(const int &key, bool from_primer) {
 
     return {false, vec_from_string(RES_ERR_KEY)};
 };
+
+/** Send request to primary server to retrieve log file if backup server crashes/restarts */
+

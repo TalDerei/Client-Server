@@ -7,6 +7,14 @@
 
 using namespace std;
 
+/* request API call from backup server */
+bool server_cmd_ror(int sd, const vec &req, Storage &storage) {
+    std::cout << "ROR!" << std::endl;
+    vec disk = storage.load_disk();
+    send_reliably(sd, disk);
+    return false;
+}
+
 
 /* update API call from primary server */
 bool server_cmd_pvi(int sd, const vec &req, Storage &storage) {

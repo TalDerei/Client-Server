@@ -28,6 +28,9 @@ struct config_t {
 
     /** Thread count */
     int threads = 2;
+
+    /** API command */
+    std::string command = "";
 };
 
 #endif
